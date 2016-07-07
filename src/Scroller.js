@@ -1,4 +1,4 @@
-import Easing from './Easing';
+const Easing = require('./Easing');
 
 class Scroller {
   constructor(prop) {
@@ -54,4 +54,4 @@ class Scroller {
   }
 }
 
-export default Scroller;
+module.exports = Scroller;

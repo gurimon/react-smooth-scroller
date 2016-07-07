@@ -1,3 +1,3 @@
-import Scroller from './Scroller';
+const Scroller = require('./Scroller');
 
-export default Scroller;
+module.exports = Scroller;

@@ -176,4 +176,4 @@ class Easing {
   }
 };
 
-export default Easing;
+module.exports = Easing;
