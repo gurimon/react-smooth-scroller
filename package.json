@@ -1,0 +1,23 @@
+{
+  "name": "gurimon",
+  "version": "0.0.1",
+  "description": "",
+  "main": "/dist/index.js",
+  "scripts": {
+    "babel": "babel ./src --out-dir ./dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gurimon/react-smooth-scroller.git"
+  },
+  "author": "gurimon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gurimon/react-smooth-scroller/issues"
+  },
+  "homepage": "https://github.com/gurimon/react-smooth-scroller#readme",
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-preset-es2015": "^6.9.0"
+  }
+}
