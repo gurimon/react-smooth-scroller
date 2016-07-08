@@ -7,77 +7,91 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Easing = require('./Easing');
 
 var Scroller = function () {
-  function Scroller(prop) {
+  function Scroller() {
     _classCallCheck(this, Scroller);
 
-    this.scrollBody = prop.scrollBody;
-    this.easing = prop.easing;
-    this.duration = prop.duration;
-    this.frameTime = prop.frameTime;
-    this.elapsedTime = prop.elapsedTime;
-    this.timer = prop.timer;
+    this.scrollBody = document.body || document.documentElement;
+    this.elapsedTime = 0; // elapsed time
+    this.timer = null;
+
+    this.option = {
+      easing: 'easeOutQuint', // default easing
+      duration: 1000, // default all time
+      frame: 13, // default one frame time
+      revise: 0 };
   }
 
+  /**
+   * scrollToTop
+   * @param  {Object} option easing, duration, frame is setting
+   * @return {void}
+   */
+
+
   _createClass(Scroller, [{
-    key: 'scrollTop',
+    key: 'scrollToTop',
+    value: function scrollToTop() {
+      var option = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-
-    // scroll top
-    value: function scrollTop() {
-      var start = this.scrollBody.scrollTop,
-          end = 0;
-      this.scroll(start, end);
+      if (this.elapsedTime > 0) return;
+      var sX = this.scrollBody.scrollTop,
+          eX = option.revise || this.option.revise;
+      this.scroller(sX, eX, option);
     }
 
-    // to scroll
+    /**
+     * scrollToTarget
+     * @param  {String} target id name or class name
+     * @param  {Object} option easing, duration, frame, revise is setting
+     * @return {void}
+     */
 
   }, {
-    key: 'scrollTarget',
-    value: function scrollTarget(className) {
-      var _easing = arguments.length <= 1 || arguments[1] === undefined ? this.easing : arguments[1];
+    key: 'scrollToTarget',
+    value: function scrollToTarget(className) {
+      var option = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-      var elm = document.getElementsByClassName(className);
-      var start = this.scrollBody.scrollTop,
-          end = elm[0].getBoundingClientRect().top;
-      this.scroll(start, end, _easing);
+      if (this.elapsedTime > 0) return;
+      var elm = document.getElementsByClassName(className),
+          revise = option.revise || this.option.revise;
+      var sX = this.scrollBody.scrollTop,
+          eX = elm[0].getBoundingClientRect().top + revise;
+      this.scroller(sX, eX, option);
     }
+
+    /**
+     * scroller
+     * @param  {Number} sX     start x px
+     * @param  {Number} eX     end x px
+     * @param  {Object} option
+     * @return {void}
+     */
+
   }, {
-    key: 'scroll',
-    value: function scroll(start, end) {
+    key: 'scroller',
+    value: function scroller(sX, eX) {
       var _this = this;
 
-      var _easing = arguments.length <= 2 || arguments[2] === undefined ? this.easing : arguments[2];
+      var option = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
       clearTimeout(this.timer);
-      var current = this.scrollBody.scrollTop;
-      if (this.elapsedTime >= this.duration) {
-        this.scrollBody.scrollTop = end;
+      var easing = option.easing || this.option.easing,
+          duration = option.duration || this.option.duration,
+          frame = option.frame || this.option.frame;
+
+      if (this.elapsedTime >= duration) {
+        this.scrollBody.scrollTop = eX;
         this.elapsedTime = 0;
       } else {
-        var easing = Easing[_easing];
-        this.scrollBody.scrollTop = easing(this.elapsedTime, start, end - start, this.duration);
+        var ease = Easing[easing] || Easing[this.option.easing];
+        this.scrollBody.scrollTop = ease(this.elapsedTime, sX, eX - sX, duration);
 
-        this.elapsedTime += this.frameTime;
+        this.elapsedTime += frame;
 
         this.timer = setTimeout(function () {
-          _this.scroll(start, end);
-        }, this.frameTime);
+          _this.scroller(sX, eX, option);
+        }, frame);
       }
-    }
-  }], [{
-    key: 'set',
-    value: function set() {
-      var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-      var prop = {};
-      prop.scrollBody = options.scrollBody || document.body || document.documentElement;
-      prop.easing = options.easing || 'easeOutQuint'; // easing
-      prop.duration = options.duration || 1000; // all time
-      prop.frameTime = options.frameTime || 13; // one frame time
-      prop.elapsedTime = 0; // elapsed time
-      prop.timer = null;
-
-      return new Scroller(prop);
     }
   }]);
 

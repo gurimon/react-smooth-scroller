@@ -1,3 +1,3 @@
 const Scroller = require('./Scroller');
 
-module.exports = Scroller;
+module.exports = new Scroller();

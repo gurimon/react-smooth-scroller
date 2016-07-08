@@ -1,55 +1,68 @@
 const Easing = require('./Easing');
 
 class Scroller {
-  constructor(prop) {
-    this.scrollBody  = prop.scrollBody;
-    this.easing      = prop.easing;
-    this.duration    = prop.duration;
-    this.frameTime   = prop.frameTime;
-    this.elapsedTime = prop.elapsedTime;
-    this.timer       = prop.timer;
+  constructor() {
+    this.scrollBody  = document.body || document.documentElement;
+    this.elapsedTime = 0;       // elapsed time
+    this.timer       = null;
+
+    this.option = {
+      easing:   'easeOutQuint', // default easing
+      duration: 1000,           // default all time
+      frame:    13,             // default one frame time
+      revise:   0,              // default revise pixel
+    };
   }
 
-  static set(options = {}) {
-    let prop = {};
-    prop.scrollBody  = options.scrollBody || document.body || document.documentElement;
-    prop.easing      = options.easing || 'easeOutQuint';  // easing
-    prop.duration    = options.duration || 1000;          // all time
-    prop.frameTime   = options.frameTime || 13;           // one frame time
-    prop.elapsedTime = 0;                                 // elapsed time
-    prop.timer       = null;
-
-    return new Scroller(prop);
+  /**
+   * scrollToTop
+   * @param  {Object} option easing, duration, frame is setting
+   * @return {void}
+   */
+  scrollToTop(option = {}) {
+    if(this.elapsedTime > 0) return;
+    const sX = this.scrollBody.scrollTop, eX = option.revise || this.option.revise;
+    this.scroller(sX, eX, option);
   }
 
-  // scroll top
-  scrollTop() {
-    const start = this.scrollBody.scrollTop, end = 0;
-    this.scroll(start, end);
+  /**
+   * scrollToTarget
+   * @param  {String} target id name or class name
+   * @param  {Object} option easing, duration, frame, revise is setting
+   * @return {void}
+   */
+  scrollToTarget(className, option = {}) {
+    if(this.elapsedTime > 0) return;
+    const elm = document.getElementsByClassName(className), revise = option.revise || this.option.revise;
+    const sX = this.scrollBody.scrollTop, eX = elm[0].getBoundingClientRect().top + revise;
+    this.scroller(sX, eX, option);
   }
 
-  // to scroll
-  scrollTarget(className, _easing = this.easing) {
-    const elm = document.getElementsByClassName(className);
-    const start = this.scrollBody.scrollTop, end = elm[0].getBoundingClientRect().top;
-    this.scroll(start, end, _easing);
-  }
-
-  scroll(start, end, _easing = this.easing) {
+  /**
+   * scroller
+   * @param  {Number} sX     start x px
+   * @param  {Number} eX     end x px
+   * @param  {Object} option
+   * @return {void}
+   */
+  scroller(sX, eX, option = {}) {
     clearTimeout(this.timer);
-    let current = this.scrollBody.scrollTop;
-    if(this.elapsedTime >= this.duration) {
-      this.scrollBody.scrollTop = end;
+    const easing   = option.easing || this.option.easing,
+          duration = option.duration || this.option.duration,
+          frame    = option.frame || this.option.frame;
+
+    if(this.elapsedTime >= duration) {
+      this.scrollBody.scrollTop = eX;
       this.elapsedTime = 0;
     } else {
-      const easing = Easing[_easing];
-      this.scrollBody.scrollTop = easing(this.elapsedTime, start, end - start, this.duration);
+      const ease = Easing[easing] || Easing[this.option.easing];
+      this.scrollBody.scrollTop = ease(this.elapsedTime, sX, eX - sX, duration);
 
-      this.elapsedTime += this.frameTime;
+      this.elapsedTime += frame;
 
       this.timer = setTimeout(() => {
-        this.scroll(start, end);
-      }, this.frameTime);
+        this.scroller(sX, eX, option);
+      }, frame);
     }
   }
 }
