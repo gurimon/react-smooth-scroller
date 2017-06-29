@@ -10,7 +10,9 @@ var Scroller = function () {
   function Scroller() {
     _classCallCheck(this, Scroller);
 
-    this.scrollBody = document.body || document.documentElement;
+    // ieはdocumentElement
+    var isMatch = navigator.userAgent.toLowerCase().match(/webkit/);
+    this.scrollBody = isMatch ? document.body : document.documentElement;
     this.elapsedTime = 0; // elapsed time
     this.timer = null;
 
@@ -22,13 +24,24 @@ var Scroller = function () {
   }
 
   /**
-   * scrollToTop
-   * @param  {Object} option easing, duration, frame is setting
-   * @return {void}
+   * scrollReset
    */
 
 
   _createClass(Scroller, [{
+    key: 'scrollReset',
+    value: function scrollReset() {
+      clearTimeout(this.timer);
+      this.scrollBody.scrollTop = 0;
+    }
+
+    /**
+     * scrollToTop
+     * @param  {Object} option easing, duration, frame is setting
+     * @return {void}
+     */
+
+  }, {
     key: 'scrollToTop',
     value: function scrollToTop() {
       var option = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];

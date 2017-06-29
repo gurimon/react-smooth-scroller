@@ -1,6 +1,6 @@
 {
   "name": "react-smooth-scroller",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "I scroll to the location of the designation (classname).",
   "main": "./dist/index.js",
   "scripts": {

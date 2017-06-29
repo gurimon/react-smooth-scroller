@@ -2,7 +2,9 @@ const Easing = require('./Easing');
 
 class Scroller {
   constructor() {
-    this.scrollBody  = document.body || document.documentElement;
+    // ieはdocumentElement
+    const isMatch = navigator.userAgent.toLowerCase().match(/webkit/);
+    this.scrollBody  = isMatch ? document.body : document.documentElement;
     this.elapsedTime = 0;       // elapsed time
     this.timer       = null;
 
@@ -12,6 +14,14 @@ class Scroller {
       frame:    13,             // default one frame time
       revise:   0,              // default revise pixel
     };
+  }
+
+  /**
+   * scrollReset
+   */
+  scrollReset() {
+    clearTimeout(this.timer);
+    this.scrollBody.scrollTop = 0;
   }
 
   /**

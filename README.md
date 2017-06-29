@@ -76,14 +76,14 @@ rsScroller.scrollToTarget('hoge', { easing: 'linear', duration: 1500, frame: 20,
 import React from 'react';
 import rsScroller from 'react-smooth-scroller';
 
-const Test = React.createClass({
+class Test extends Component {
   onScrollTop() {
     rsScroller.scrollToTop();
-  },
+  }
 
   onScrollTarget() {
     rsScroller.scrollToTarget('hoge');
-  },
+  }
 
   render() {
     return (
@@ -96,7 +96,7 @@ const Test = React.createClass({
         <a onClick={this.onScrollTop} className="btn hoge">button-B</a>
       </div>
     )
-  },
+  }
 });
 ```
 
