@@ -10,9 +10,7 @@ var Scroller = function () {
   function Scroller() {
     _classCallCheck(this, Scroller);
 
-    // ieはdocumentElement
-    var isMatch = navigator.userAgent.toLowerCase().match(/webkit/);
-    this.scrollBody = isMatch ? document.body : document.documentElement;
+    this.scrollBody = this.scrollElm();
     this.elapsedTime = 0; // elapsed time
     this.timer = null;
 
@@ -24,11 +22,27 @@ var Scroller = function () {
   }
 
   /**
-   * scrollReset
+   * Chrome対策
    */
 
 
   _createClass(Scroller, [{
+    key: 'scrollElm',
+    value: function scrollElm() {
+      if ('scrollingElement' in document) {
+        return document.scrollingElement;
+      }
+      if (navigator.userAgent.indexOf('WebKit') != -1) {
+        return document.body;
+      }
+      return document.documentElement;
+    }
+
+    /**
+     * scrollReset
+     */
+
+  }, {
     key: 'scrollReset',
     value: function scrollReset() {
       clearTimeout(this.timer);
@@ -105,6 +119,17 @@ var Scroller = function () {
           _this.scroller(sX, eX, option);
         }, frame);
       }
+    }
+
+    /**
+     * get current scrolltop
+     * @return {Number}
+     */
+
+  }, {
+    key: 'getCurrentTop',
+    value: function getCurrentTop() {
+      return this.scrollBody.scrollTop;
     }
   }]);
 

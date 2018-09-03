@@ -2,9 +2,7 @@ const Easing = require('./Easing');
 
 class Scroller {
   constructor() {
-    // ieはdocumentElement
-    const isMatch = navigator.userAgent.toLowerCase().match(/webkit/);
-    this.scrollBody  = isMatch ? document.body : document.documentElement;
+    this.scrollBody = this.scrollElm();
     this.elapsedTime = 0;       // elapsed time
     this.timer       = null;
 
@@ -14,6 +12,19 @@ class Scroller {
       frame:    13,             // default one frame time
       revise:   0,              // default revise pixel
     };
+  }
+
+  /**
+   * Chrome対策
+   */
+  scrollElm() {
+    if ('scrollingElement' in document) {
+      return document.scrollingElement;
+    }
+    if (navigator.userAgent.indexOf('WebKit') != -1) {
+      return document.body;
+    }
+    return document.documentElement;
   }
 
   /**
@@ -74,6 +85,14 @@ class Scroller {
         this.scroller(sX, eX, option);
       }, frame);
     }
+  }
+
+  /**
+   * get current scrolltop
+   * @return {Number}
+   */
+  getCurrentTop() {
+    return this.scrollBody.scrollTop;
   }
 }
 

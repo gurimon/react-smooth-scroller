@@ -13,9 +13,6 @@ $ npm i -S react-smooth-scroller
 ```javascript
 // ES2015 imports
 import rsScroller from 'react-smooth-scroller';
-
-// ES5 require
-const rsScroller = require('react-smooth-scroller');
 ```
 
 ## API
@@ -36,6 +33,12 @@ rsScroller.scrollToTarget('hoge');
 
 // default option => { easing: 'easeOutQuint', duration: 1000, frame: 13, revise: 0 }
 rsScroller.scrollToTarget('hoge', { easing: 'linear', duration: 1500, frame: 20, revise: 100 });
+```
+
+### rsScroller#scroller(start, end, option)
+
+```javascript
+rsScroller.scroller(0, 600);
 ```
 
 ##### easing
@@ -76,7 +79,7 @@ rsScroller.scrollToTarget('hoge', { easing: 'linear', duration: 1500, frame: 20,
 import React from 'react';
 import rsScroller from 'react-smooth-scroller';
 
-class Test extends Component {
+class Test extends React.Component {
   onScrollTop() {
     rsScroller.scrollToTop();
   }
@@ -91,9 +94,9 @@ class Test extends Component {
         <h1>react-smooth-scroller</h1>
         <div className="test__desc">
           <p>test</p>
-          <a onClick={this.onScrollTarget} className="btn">button-A</a>
+          <a onClick={ () => this.onScrollTarget() } className="btn">button-A</a>
         </div>
-        <a onClick={this.onScrollTop} className="btn hoge">button-B</a>
+        <a onClick={ () => this.onScrollTop() } className="btn hoge">button-B</a>
       </div>
     )
   }
